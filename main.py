@@ -3,7 +3,7 @@
 from window import Ui_MainWindow
 
 import subprocess
-
+import argparse
 import sys
 import os
 
@@ -121,6 +121,16 @@ class App():
         return self.filenames[i] + ' (' + self.groups[i] + ')'
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--input-folder', default=PATH,
+        help='Folder with source images, default: ' + PATH)
+    parser.add_argument('-o', '--output-folder', default=PATH_PDF,
+        help='Folder for generated PDFs (existing ones will be overwritten), default: ' + PATH_PDF)
+    args = parser.parse_args()
+
+    PATH = args.source_folder
+    PATH_PDF = args.output_folder
+
     app = QApplication(sys.argv)
     w = Window()
     a = App(w)
