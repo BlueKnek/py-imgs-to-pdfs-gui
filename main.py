@@ -2,6 +2,8 @@
 
 from window import Ui_MainWindow
 
+import subprocess
+
 import sys
 import os
 
@@ -10,6 +12,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QRectF, QModelIndex, pyqtSignal
 
 PATH = 'scans'
+PATH_PDF = 'pdfs'
 
 # https://stackoverflow.com/questions/43126721/pyqt-detect-resizing-in-widget-window-resized-signal/43126946
 
@@ -44,6 +47,7 @@ class App():
         self.ui.next.pressed.connect(self.next)
         self.ui.new_.pressed.connect(self.new)
         self.ui.last.pressed.connect(self.last)
+        self.ui.generate.pressed.connect(self.generate)
         self.ui.group.textChanged.connect(self.manual)
         self.ui.list.activated.connect(self.move_to_model_index)
         w.resized.connect(self.update_ui)
@@ -87,6 +91,26 @@ class App():
     def move_to_model_index(self, model_index):
         self.current_i = model_index.row()
         self.update_ui()
+
+    def generate(self):
+        groups = {}
+        for i in range(len(self.filenames)):
+            filename = self.filenames[i]
+            group = self.groups[i]
+            if not group in groups:
+                groups[group] = []
+            groups[group].append(filename)
+        for groupname, filenames in groups.items():
+            pdf_filename = groupname+'.pdf'
+            info = 'Generating '+pdf_filename
+            print(info)
+            self.ui.statusbar.showMessage(info, 600*1000)
+            subprocess.check_call(
+                ['convert'] +
+                [os.path.join(PATH, n) for n in filenames] +
+                [os.path.join(PATH_PDF, pdf_filename)]
+            )
+        self.ui.statusbar.showMessage('Generated all PDFs', 10*1000)
 
     def set_group(self, group):
         i = self.current_i

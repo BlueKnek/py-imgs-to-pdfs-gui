@@ -39,10 +39,10 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="1">
-         <widget class="QPushButton" name="next">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="last">
           <property name="text">
-           <string>&gt;</string>
+           <string>Last</string>
           </property>
          </widget>
         </item>
@@ -53,13 +53,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="last">
-          <property name="text">
-           <string>Last</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="new_">
           <property name="text">
@@ -67,7 +60,21 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="next">
+          <property name="text">
+           <string>&gt;</string>
+          </property>
+         </widget>
+        </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="generate">
+        <property name="text">
+         <string>Generate PDFs</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QProgressBar" name="progress">
