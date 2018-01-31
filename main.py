@@ -34,14 +34,15 @@ class App():
     def __init__(self, w):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(w)
+
+        self.filenames = os.listdir(PATH)
+        self.groups = ['x' for i in range(len(self.filenames))]
+        self.current_i = 0
+
         self.prepare_ui(w)
 
     def prepare_ui(self, w):
-        self.filenames = os.listdir(PATH)
-        self.groups = ['x' for i in range(len(self.filenames))]
-        self.last_group = 0
         self.ui.progress.setMaximum(len(self.filenames))
-        self.current_i = 0
         self.ui.list.addItems([self.list_filename(i) for i in range(len(self.filenames))])
         self.ui.prev.pressed.connect(self.prev)
         self.ui.next.pressed.connect(self.next)
@@ -51,6 +52,12 @@ class App():
         self.ui.group.textChanged.connect(self.manual)
         self.ui.list.activated.connect(self.move_to_model_index)
         w.resized.connect(self.update_ui)
+
+    def get_last_group(self):
+        if self.current_i == 0:
+            return '0'
+        else:
+            return self.groups[self.current_i-1]
 
     def update_ui(self):
         filename = self.filenames[self.current_i]
@@ -78,11 +85,14 @@ class App():
         self.update_ui()
 
     def new(self):
-        self.last_group += 1
+        # try:
+        self.last_group = int(self.last_group) + 1
+        # except:
+        #    self.last_group = '0'
         self.last()
 
     def last(self):
-        self.set_group(self.last_group)
+        self.set_group(self.get_last_group())
         self.next()
 
     def manual(self, a):
@@ -128,7 +138,7 @@ if __name__ == '__main__':
         help='Folder for generated PDFs (existing ones will be overwritten), default: ' + PATH_PDF)
     args = parser.parse_args()
 
-    PATH = args.source_folder
+    PATH = args.input_folder
     PATH_PDF = args.output_folder
 
     app = QApplication(sys.argv)
